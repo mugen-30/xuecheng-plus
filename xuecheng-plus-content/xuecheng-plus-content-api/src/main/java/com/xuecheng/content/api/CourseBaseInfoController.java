@@ -2,15 +2,15 @@ package com.xuecheng.content.api;
 
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.content.model.dto.AddCourseDto;
+import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -31,4 +31,23 @@ public class CourseBaseInfoController {
         return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
 
     }
+
+    @ApiOperation(value = "新增课程")
+    @PostMapping("course")
+    public CourseBaseInfoDto createCourseBase(@RequestBody @Validated AddCourseDto addCourseDto){
+
+        Long companyId = 1232141425L;
+
+        return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
+
+    }
+
+    @ApiOperation(value = "根据id查询课程")
+    @PostMapping("course/{id}")
+    public CourseBaseInfoDto getCourseBaseById(@PathVariable Long id){
+
+        return courseBaseInfoService.getCourseBaseInfo(id);
+
+    }
+
 }
