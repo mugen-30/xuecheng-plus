@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author mugen
+ * @description 课程分类树Dto
+ */
 @Data
 public class CourseCategoryTreeDto extends CourseCategory {
 

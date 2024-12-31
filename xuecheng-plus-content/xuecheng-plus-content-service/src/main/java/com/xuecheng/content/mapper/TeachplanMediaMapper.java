@@ -5,7 +5,7 @@ import com.xuecheng.content.model.po.TeachplanMedia;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author mugen
