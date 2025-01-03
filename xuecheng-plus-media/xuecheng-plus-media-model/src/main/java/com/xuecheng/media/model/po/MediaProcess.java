@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author mugen
@@ -71,8 +71,6 @@ public class MediaProcess implements Serializable {
      * 失败次数
      */
     private int failCount;
-
-
 
 
 }
