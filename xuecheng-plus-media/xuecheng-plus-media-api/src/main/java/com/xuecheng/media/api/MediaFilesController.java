@@ -61,4 +61,6 @@ public class MediaFilesController {
     public RestResponse<Boolean> delete(@PathVariable String id) {
         return mediaFileService.deleteMediaFiles(id);
     }
+
+
 }
