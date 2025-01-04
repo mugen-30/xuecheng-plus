@@ -8,6 +8,8 @@ import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
 
+import java.io.File;
+
 /**
  * @author mugen
  * @description 媒资文件管理业务类
@@ -29,7 +31,7 @@ public interface MediaFileService {
      * @return com.xuecheng.base.model.PageResult<com.xuecheng.media.model.po.MediaFiles>
      * @description 媒资文件上传方法
      */
-    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto) throws Exception;
+    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto);
 
     /**
      * @param companyId           机构id
@@ -75,4 +77,21 @@ public interface MediaFileService {
      * @description 合并分块
      */
     public RestResponse mergechunks(Long companyId, String fileMd5, int chunkTotal, UploadFileParamsDto uploadFileParamsDto);
+
+    /**
+     * @param id 文件id
+     * @return com.xuecheng.base.model.RestResponse<java.lang.Boolean>
+     * @description 删除文件
+     */
+    RestResponse<Boolean> deleteMediaFiles(String id);
+
+    /**
+     * 从minio下载文件
+     * @param bucket 桶
+     * @param objectName 对象名称
+     * @return 下载后的文件
+     */
+    File downloadFileFromMinIO(String bucket, String objectName);
+
+    public boolean uploadFile(String filePath, String bucketName, String objectName, String contentType);
 }

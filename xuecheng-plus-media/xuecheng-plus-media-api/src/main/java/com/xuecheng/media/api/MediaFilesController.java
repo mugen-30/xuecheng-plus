@@ -2,6 +2,7 @@ package com.xuecheng.media.api;
 
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
@@ -34,7 +35,6 @@ public class MediaFilesController {
     public PageResult<MediaFiles> list(PageParams pageParams, @RequestBody QueryMediaParamsDto queryMediaParamsDto) {
         Long companyId = 1232141425L;
         return mediaFileService.queryMediaFiels(companyId, pageParams, queryMediaParamsDto);
-
     }
 
     @ApiOperation("上传图片接口")
@@ -54,5 +54,11 @@ public class MediaFilesController {
 
         return mediaFileService.uploadFile(companyId, localFilePath, uploadFileParamsDto);
 
+    }
+
+    @ApiOperation("删除媒资接口")
+    @DeleteMapping("/{id}")
+    public RestResponse<Boolean> delete(@PathVariable String id) {
+        return mediaFileService.deleteMediaFiles(id);
     }
 }
