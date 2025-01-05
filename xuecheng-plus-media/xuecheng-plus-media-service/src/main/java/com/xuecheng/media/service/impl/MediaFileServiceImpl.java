@@ -2,6 +2,7 @@ package com.xuecheng.media.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.xuecheng.base.exception.XueChengPlusException;
@@ -17,7 +18,6 @@ import com.xuecheng.media.model.po.MediaFiles;
 import com.xuecheng.media.model.po.MediaProcess;
 import com.xuecheng.media.service.MediaFileService;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.*;
 import java.nio.file.Files;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -51,7 +49,7 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 @EnableAspectJAutoProxy(exposeProxy = true)
-public class MediaFileServiceImpl implements MediaFileService {
+public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFiles> implements MediaFileService {
 
     @Resource
     MediaFilesMapper mediaFilesMapper;
@@ -146,6 +144,11 @@ public class MediaFileServiceImpl implements MediaFileService {
         }
         return false;
     }
+
+//    @Override
+//    public MediaFiles getMediaFileById(String id) {
+//        return mediaFilesMapper.selectById(id);
+//    }
 
     public String calculateMD5(File file) {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
@@ -309,7 +312,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 
     @Override
-    public RestResponse uploadChunk(String fileMd5, int chunk, String localChunkFilePath) throws Exception {
+    public RestResponse uploadChunk(String fileMd5, int chunk, String localChunkFilePath){
 
         // 获取文件的MIME类型
         String mimeType = getMimeType(null);

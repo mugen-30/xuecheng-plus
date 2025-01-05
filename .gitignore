@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+xc-ui-pc-static-portal
 
 ### STS ###
 .apt_generated

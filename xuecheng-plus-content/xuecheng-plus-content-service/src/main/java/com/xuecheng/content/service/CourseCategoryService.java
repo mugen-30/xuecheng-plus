@@ -4,14 +4,6 @@ import com.xuecheng.content.model.dto.CourseCategoryTreeDto;
 
 import java.util.List;
 
-/**
- * <p>
- * 课程分类 服务类
- * </p>
- *
- * @author mugen
- * @since 2024-12-26
- */
 public interface CourseCategoryService {
 
     /**

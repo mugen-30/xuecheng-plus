@@ -1,5 +1,6 @@
 package com.xuecheng.media.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.base.model.RestResponse;
@@ -14,7 +15,7 @@ import java.io.File;
  * @author mugen
  * @description 媒资文件管理业务类
  */
-public interface MediaFileService {
+public interface MediaFileService extends IService<MediaFiles> {
 
     /**
      * @param pageParams          分页参数
@@ -66,7 +67,7 @@ public interface MediaFileService {
      * @return com.xuecheng.base.model.RestResponse
      * @description 上传分块
      */
-    public RestResponse uploadChunk(String fileMd5, int chunk, String localChunkFilePath) throws Exception;
+    public RestResponse uploadChunk(String fileMd5, int chunk, String localChunkFilePath);
 
     /**
      * @param companyId           机构id
@@ -93,5 +94,21 @@ public interface MediaFileService {
      */
     File downloadFileFromMinIO(String bucket, String objectName);
 
-    public boolean uploadFile(String filePath, String bucketName, String objectName, String contentType);
+    /**
+     * 上传文件到minio
+     * @param filePath 文件路径
+     * @param bucketName 桶名称
+     * @param objectName 对象名称
+     * @param contentType 内容类型
+     * @return 是否上传成功
+     */
+    boolean uploadFile(String filePath, String bucketName, String objectName, String contentType);
+
+    /**
+     * 根据id获取文件信息
+     * @param id 文件id
+     * @return 文件信息
+     */
+//    MediaFiles getMediaFileById(String id);
+
 }
