@@ -84,7 +84,7 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto) {
+    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto, String objectName) {
         File file = new File(localFilePath);
         if (!file.exists()) {
             XueChengPlusException.cast("文件不存在");
@@ -96,7 +96,9 @@ public class MediaFileServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFil
         String mimeType = getMimeType(extension);
         //生成文件名
         String fileMd5 = calculateMD5(file);
-        String objectName = getDefaultFolderPath() + fileMd5 + extension;
+        if(objectName == null){
+            objectName = getDefaultFolderPath() + fileMd5 + extension;
+        }
         //将文件上传到minio
         boolean flag = uploadFile(localFilePath, bucket_media, objectName, mimeType);
         if (!flag) {

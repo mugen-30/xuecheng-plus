@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author mugen
@@ -39,7 +40,8 @@ public class MediaFilesController {
 
     @ApiOperation("上传图片接口")
     @RequestMapping(value = "/upload/coursefile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadFileResultDto upload(@RequestParam("filedata") MultipartFile filedata) throws Exception {
+    public UploadFileResultDto upload(@RequestPart("filedata") MultipartFile filedata,
+                                      @RequestParam(value = "objectName", required = false) String objectName) throws IOException {
 
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
         uploadFileParamsDto.setFilename(filedata.getOriginalFilename());
@@ -52,7 +54,7 @@ public class MediaFilesController {
         Long companyId = 1232141425L;
         String localFilePath = tempFile.getAbsolutePath();
 
-        return mediaFileService.uploadFile(companyId, localFilePath, uploadFileParamsDto);
+        return mediaFileService.uploadFile(companyId, localFilePath, uploadFileParamsDto, objectName);
 
     }
 

@@ -18,7 +18,7 @@ public class MediaFileServiceTest {
 
         Long companyId = 1232141425L;
         UploadFileParamsDto uploadFileParamsDto = new UploadFileParamsDto();
-        mediaFileService.uploadFile(companyId, "D:\\63775516760820.png", uploadFileParamsDto);
+        mediaFileService.uploadFile(companyId, "D:\\63775516760820.png", uploadFileParamsDto, null);
 
     }
 

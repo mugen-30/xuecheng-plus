@@ -32,7 +32,7 @@ public interface MediaFileService extends IService<MediaFiles> {
      * @return com.xuecheng.base.model.PageResult<com.xuecheng.media.model.po.MediaFiles>
      * @description 媒资文件上传方法
      */
-    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto);
+    public UploadFileResultDto uploadFile(Long companyId, String localFilePath, UploadFileParamsDto uploadFileParamsDto, String objectName);
 
     /**
      * @param companyId           机构id

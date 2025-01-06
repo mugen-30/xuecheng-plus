@@ -3,6 +3,7 @@ package com.xuecheng.media.api;
 import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.model.po.MediaFiles;
 import com.xuecheng.media.service.MediaFileService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+@Api(value = "视频预览接口", tags = "视频预览接口")
 @RestController
 @RequestMapping("/open")
 public class MediaOpenController {
