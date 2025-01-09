@@ -8,8 +8,10 @@ import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,25 +24,32 @@ public class CourseBaseInfoController {
     @Resource
     private CourseBaseInfoService courseBaseInfoService;
 
+
     @ApiOperation(value = "课程列表查询")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_list')")
     @PostMapping("/course/list")
     public PageResult<CourseBase> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto) {
 
-        return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamsDto);
+        //获取当前用户所属机构ID
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+
+        return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParamsDto);
 
     }
 
     @ApiOperation(value = "新增课程")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_add')")
     @PostMapping("course")
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated AddCourseDto addCourseDto) {
 
-        Long companyId = 1232141425L;
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
 
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
 
     }
 
     @ApiOperation(value = "根据id查询课程")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course')")
     @GetMapping("course/{id}")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable Long id) {
 
@@ -52,7 +61,7 @@ public class CourseBaseInfoController {
     @PutMapping("/course")
     public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated EditCourseDto editCourseDto) {
 
-        Long companyId = 1232141425L;
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
 
         return courseBaseInfoService.updateCourseBase(companyId, editCourseDto);
 
@@ -62,7 +71,9 @@ public class CourseBaseInfoController {
     @DeleteMapping("/course/{id}")
     public void deleteCourseBase(@PathVariable Long id) {
 
-        courseBaseInfoService.deleteCourseBaseById(id);
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+
+        courseBaseInfoService.deleteCourseBaseById(companyId,id);
 
     }
 

@@ -2,6 +2,7 @@ package com.xuecheng.content.api;
 
 import com.xuecheng.content.model.po.CourseTeacher;
 import com.xuecheng.content.service.CourseTeacherService;
+import com.xuecheng.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CourseTeacherController {
     @PostMapping("/courseTeacher")
     public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
 
-        Long companyId = 1232141425L;
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
 
         return courseTeacherService.saveCourseTeacher(companyId, courseTeacher);
     }

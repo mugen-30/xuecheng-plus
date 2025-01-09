@@ -2,6 +2,7 @@ package com.xuecheng.content.api;
 
 import com.xuecheng.content.model.dto.CoursePreviewDto;
 import com.xuecheng.content.service.CoursePublishService;
+import com.xuecheng.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,7 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping ("/courseaudit/commit/{courseId}")
     public void commitAudit(@PathVariable("courseId") Long courseId){
-        Long companyId = 1232141425L;
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
         coursePublishService.commitAudit(companyId, courseId);
     }
 
@@ -49,7 +50,7 @@ public class CoursePublishController {
     @ResponseBody
     @PostMapping("/coursepublish/{courseId}")
     public void coursePublish(@PathVariable("courseId") Long courseId){
-        Long companyId = 1232141425L;
+        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
         coursePublishService.publish(companyId, courseId);
     }
 

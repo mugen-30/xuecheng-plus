@@ -13,9 +13,11 @@ import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.content.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +48,7 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
     TeachplanMediaMapper teachplanMediaMapper;
 
     @Override
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
 
         //查询条件封装对象
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
@@ -58,6 +60,8 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
         queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()), CourseBase::getAuditStatus, queryCourseParamsDto.getAuditStatus());
         //根据课程发布状态
         queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()), CourseBase::getStatus, queryCourseParamsDto.getPublishStatus());
+        //根据所属机构查询课程
+        queryWrapper.eq(CourseBase::getCompanyId, companyId);
 
         //分页参数封装对象
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
@@ -173,6 +177,7 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_base')")
     @Override
     public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
         Long courseId = editCourseDto.getId();
@@ -196,25 +201,31 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
             XueChengPlusException.cast("修改课程基本信息失败");
         }
 
-        //更新营销信息
-        CourseMarket courseMarket = new CourseMarket();
-        //将页面输入的数据，拷贝到courseMarket
-        BeanUtils.copyProperties(editCourseDto, courseMarket);
-        //设置主键为课程的id
-        courseMarket.setId(courseId);
-        //保存课程营销信息
-        saveCourseMarket(courseMarket);
+
+        if (SecurityUtil.hasAuthority("xc_teachmanager_course_market")) {
+            //更新营销信息
+            CourseMarket courseMarket = new CourseMarket();
+            //将页面输入的数据，拷贝到courseMarket
+            BeanUtils.copyProperties(editCourseDto, courseMarket);
+            //设置主键为课程的id
+            courseMarket.setId(courseId);
+            //保存课程营销信息
+            saveCourseMarket(courseMarket);
+        }
 
         return getCourseBaseInfo(courseId);
     }
 
     @Transactional
     @Override
-    public void deleteCourseBaseById(Long courseId) {
+    public void deleteCourseBaseById(Long companyId, Long courseId) {
         // 只有审核状态为 未提交 的课程可以删除
         // 删除课程需要删除课程相关的基本信息，营销信息，课程计划，课程教师信息
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
         String auditStatus = courseBase.getAuditStatus();
+        if (!companyId.equals(courseBase.getCompanyId())) {
+            XueChengPlusException.cast("只能删除本机构的课程");
+        }
         if(!auditStatus.equals("202002")){
             XueChengPlusException.cast("只有未提交审核的课程可以删除");
         }
@@ -238,6 +249,7 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
 
 
     //保存课程营销信息
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_market')")
     private int saveCourseMarket(CourseMarket courseMarketNew) {
         //收费规则
         String charge = courseMarketNew.getCharge();

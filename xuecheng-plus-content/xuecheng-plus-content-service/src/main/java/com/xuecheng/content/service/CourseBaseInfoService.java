@@ -14,11 +14,12 @@ public interface CourseBaseInfoService extends IService<CourseBase> {
     /**
      * 课程分页查询
      *
+     * @param companyId            所属机构ID
      * @param pageParams           分页参数
      * @param queryCourseParamsDto 查询参数
      * @return 查询结果
      */
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    public PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     /**
      * 创建课程基本信息
@@ -50,5 +51,5 @@ public interface CourseBaseInfoService extends IService<CourseBase> {
      * 删除课程基本信息
      * @param id 课程ID
      */
-    public void deleteCourseBaseById(Long id);
+    public void deleteCourseBaseById(Long companyId, Long id);
 }
