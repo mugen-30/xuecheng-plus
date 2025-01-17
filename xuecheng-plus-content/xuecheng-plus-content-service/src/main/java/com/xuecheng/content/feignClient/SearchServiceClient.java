@@ -12,4 +12,7 @@ public interface SearchServiceClient {
     @PostMapping("/search/index/course")
     public Boolean add(@RequestBody CourseIndex courseIndex);
 
+    @ApiOperation("删除课程索引")
+    @PostMapping("/search/index/delete_course")
+    public Boolean delete(@RequestBody CourseIndex courseIndex);
 }

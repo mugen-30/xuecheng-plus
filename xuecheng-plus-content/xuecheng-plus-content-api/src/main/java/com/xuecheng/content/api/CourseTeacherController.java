@@ -1,5 +1,6 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.model.po.CourseTeacher;
 import com.xuecheng.content.service.CourseTeacherService;
 import com.xuecheng.content.util.SecurityUtil;
@@ -27,7 +28,11 @@ public class CourseTeacherController {
     @PostMapping("/courseTeacher")
     public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacher courseTeacher) {
 
-        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if (user == null){
+            XueChengPlusException.cast("请登陆");
+        }
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         return courseTeacherService.saveCourseTeacher(companyId, courseTeacher);
     }

@@ -18,6 +18,13 @@ public class SearchServiceClientFallbackFactory implements FallbackFactory<Searc
                 XueChengPlusException.cast("请稍后重试");
                 return false;
             }
+
+            @Override
+            public Boolean delete(CourseIndex courseIndex) {
+                log.error("删除索引发生熔断:索引信息：{}，熔断信息：{}", courseIndex, throwable.toString());
+                XueChengPlusException.cast("请稍后重试");
+                return false;
+            }
         };
     }
 }

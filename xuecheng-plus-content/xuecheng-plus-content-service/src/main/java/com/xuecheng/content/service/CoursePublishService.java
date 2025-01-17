@@ -40,4 +40,24 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @param file  静态化文件
      */
     public void  uploadCourseHtml(Long courseId,File file);
+
+    /**
+     * @description 下线课程
+     * @param companyId  机构id
+     * @param courseId  课程id
+     */
+    void offline(Long companyId, Long courseId);
+
+    /**
+     * @description 删除课程静态化页面
+     * @param courseId  课程id
+     */
+    void deleteCourseHtml(Long courseId);
+
+    /**
+     * @description 获取发布课程预览信息
+     * @param courseId  课程id
+     * @return CoursePreviewDto 课程预览信息
+     */
+    CoursePreviewDto getPublishCoursePreview(Long courseId);
 }

@@ -249,6 +249,67 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         }
     }
 
+    @Override
+    public void offline(Long companyId, Long courseId) {
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        if (coursePublish == null){
+            XueChengPlusException.cast("课程不存在");
+        }
+        // 更新课程发布表的状态为已下线
+        coursePublish.setStatus("203003");
+        coursePublishMapper.updateById(coursePublish);
+
+        // 更新课程基本表的状态为已下线
+        CourseBase courseBase = courseBaseInfoService.getById(courseId);
+        courseBase.setStatus("203003");
+        courseBaseInfoService.updateById(courseBase);
+
+        // 向消息表写入数据
+        saveCourseOffLineMessage(courseId);
+    }
+
+    @Override
+    public void deleteCourseHtml(Long courseId) {
+        mediaServiceClient.delete("course/"+courseId+".html");
+    }
+
+    @Override
+    public CoursePreviewDto getPublishCoursePreview(Long courseId) {
+        CoursePreviewDto coursePreview = new CoursePreviewDto();
+        CoursePublish coursePublish = getById(courseId);
+        if (coursePublish == null) {
+            XueChengPlusException.cast("课程不存在");
+        }
+        CourseBaseInfoDto courseBaseInfoDto = new CourseBaseInfoDto();
+        BeanUtils.copyProperties(coursePublish, courseBaseInfoDto);
+        //课程计划
+        String teachplan = coursePublish.getTeachplan();
+        String teacher = coursePublish.getTeachers();
+        //转换为List
+        List<TeachPlanDto> teachPlanDtos = JSON.parseArray(teachplan, TeachPlanDto.class);
+        List<CourseTeacher> courseTeachers = JSON.parseArray(teacher, CourseTeacher.class);
+        //封装数据
+        coursePreview.setCourseBase(courseBaseInfoDto);
+        coursePreview.setTeachplans(teachPlanDtos);
+        coursePreview.setCourseTeachers(courseTeachers);
+        return coursePreview;
+    }
+
+    /**
+     * 保存课程下架消息
+     * @param courseId 课程ID
+     * @throws XueChengPlusException 如果消息添加失败，则抛出XueChengPlusException异常
+     */
+    private void saveCourseOffLineMessage(Long courseId) {
+
+        MqMessage message = mqMessageService.addMessage("course_offline",
+                String.valueOf(courseId), null, null);
+        if (message == null) {
+            XueChengPlusException.cast(CommonError.UNKNOWN_ERROR);
+        }
+
+    }
+
     /**
      * 保存课程发布消息
      * @param courseId 课程ID

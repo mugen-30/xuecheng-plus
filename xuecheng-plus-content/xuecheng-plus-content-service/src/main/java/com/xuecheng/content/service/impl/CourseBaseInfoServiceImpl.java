@@ -16,7 +16,9 @@ import com.xuecheng.content.service.CourseBaseInfoService;
 import com.xuecheng.content.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@EnableAspectJAutoProxy
 public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, CourseBase> implements CourseBaseInfoService {
 
     @Resource
@@ -46,6 +49,7 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
 
     @Resource
     TeachplanMediaMapper teachplanMediaMapper;
+
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
@@ -138,7 +142,8 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
         //设置课程id
         courseMarket.setId(courseBaseNew.getId());
         //保存课程营销信息
-        saveCourseMarket(courseMarket);
+        CourseBaseInfoServiceImpl courseBaseInfoService = (CourseBaseInfoServiceImpl) AopContext.currentProxy();
+        courseBaseInfoService.saveCourseMarket(courseMarket);
 
         return getCourseBaseInfo(courseBaseNew.getId());
 
@@ -177,7 +182,6 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('xc_teachmanager_course_base')")
     @Override
     public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
         Long courseId = editCourseDto.getId();
@@ -210,7 +214,8 @@ public class CourseBaseInfoServiceImpl extends ServiceImpl<CourseBaseMapper, Cou
             //设置主键为课程的id
             courseMarket.setId(courseId);
             //保存课程营销信息
-            saveCourseMarket(courseMarket);
+            CourseBaseInfoServiceImpl courseBaseInfoService = (CourseBaseInfoServiceImpl) AopContext.currentProxy();
+            courseBaseInfoService.saveCourseMarket(courseMarket);
         }
 
         return getCourseBaseInfo(courseId);

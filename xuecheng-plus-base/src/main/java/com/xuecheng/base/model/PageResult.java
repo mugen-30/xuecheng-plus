@@ -26,6 +26,10 @@ public class PageResult<T> implements Serializable {
     //每页记录数
     private long pageSize;
 
+    // 默认构造函数
+    public PageResult() {
+    }
+
     public PageResult(List<T> items, long counts, long page, long pageSize) {
         this.items = items;
         this.counts = counts;

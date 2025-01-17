@@ -1,7 +1,7 @@
 package com.xuecheng.auth.controller;
 
-import com.xuecheng.ucenter.model.po.XcUser;
-import com.xuecheng.ucenter.service.WxAuthService;
+import com.xuecheng.auth.model.po.XcUser;
+import com.xuecheng.auth.service.WxAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

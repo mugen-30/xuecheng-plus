@@ -1,5 +1,6 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.model.dto.AddCourseDto;
@@ -31,7 +32,11 @@ public class CourseBaseInfoController {
     public PageResult<CourseBase> list(PageParams pageParams, @RequestBody(required = false) QueryCourseParamsDto queryCourseParamsDto) {
 
         //获取当前用户所属机构ID
-        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if (user == null){
+            XueChengPlusException.cast("请登陆");
+        }
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         return courseBaseInfoService.queryCourseBaseList(companyId, pageParams, queryCourseParamsDto);
 
@@ -42,7 +47,11 @@ public class CourseBaseInfoController {
     @PostMapping("course")
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated AddCourseDto addCourseDto) {
 
-        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if (user == null){
+            XueChengPlusException.cast("请登陆");
+        }
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
 
@@ -58,24 +67,35 @@ public class CourseBaseInfoController {
     }
 
     @ApiOperation(value = "修改课程")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_base')")
     @PutMapping("/course")
     public CourseBaseInfoDto modifyCourseBase(@RequestBody @Validated EditCourseDto editCourseDto) {
 
-        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if (user == null){
+            XueChengPlusException.cast("请登陆");
+        }
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         return courseBaseInfoService.updateCourseBase(companyId, editCourseDto);
 
     }
 
     @ApiOperation(value = "删除课程")
+    @PreAuthorize("hasAuthority('xc_teachmanager_course_del')")
     @DeleteMapping("/course/{id}")
     public void deleteCourseBase(@PathVariable Long id) {
 
-        Long companyId = Long.valueOf(SecurityUtil.getUser().getCompanyId());
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        if (user == null){
+            XueChengPlusException.cast("请登陆");
+        }
+        Long companyId = Long.valueOf(user.getCompanyId());
 
         courseBaseInfoService.deleteCourseBaseById(companyId,id);
 
     }
+
 
 
 }

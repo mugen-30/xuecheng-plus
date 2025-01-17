@@ -60,7 +60,7 @@ public class MediaFilesController {
 
     @ApiOperation("删除媒资接口")
     @DeleteMapping("/{id}")
-    public RestResponse<Boolean> delete(@PathVariable String id) {
+    public RestResponse<Boolean> delete(@PathVariable("id") String id) {
         return mediaFileService.deleteMediaFiles(id);
     }
 

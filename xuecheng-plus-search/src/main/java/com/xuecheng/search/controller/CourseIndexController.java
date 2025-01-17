@@ -34,12 +34,30 @@ public class CourseIndexController {
         Long id = courseIndex.getId();
         if (id == null) {
             XueChengPlusException.cast("课程id为空");
+            return false;
         }
         Boolean result = indexService.addCourseIndex(courseIndexStore, String.valueOf(id), courseIndex);
         if (!result) {
             XueChengPlusException.cast("添加课程索引失败");
+            return false;
         }
-        return result;
+        return true;
 
+    }
+
+    @ApiOperation("删除课程索引")
+    @PostMapping("delete_course")
+    public Boolean delete(@RequestBody CourseIndex courseIndex) {
+        Long id = courseIndex.getId();
+        if (id == null) {
+            XueChengPlusException.cast("课程id为空");
+            return false;
+        }
+        Boolean result = indexService.deleteCourseIndex(courseIndexStore, String.valueOf(id));
+        if (!result) {
+            XueChengPlusException.cast("删除课程索引失败");
+            return false;
+        }
+        return true;
     }
 }
