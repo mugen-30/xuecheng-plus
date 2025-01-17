@@ -13,7 +13,7 @@ import java.util.Properties;
 public class MailUtil {
     public static void main(String[] args) throws MessagingException {
         //可以在这里直接测试方法，填自己的邮箱即可
-        sendTestMail("1870282173@qq.com", achieveCode());
+        sendTestMail("123@qq.com", achieveCode());
     }
 
     /**
@@ -63,9 +63,9 @@ public class MailUtil {
         //端口号，QQ邮箱端口587
         props.put("mail.smtp.port", "587");
         // 此处填写，写信人的账号
-        props.put("mail.user", "1870282173@qq.com");
+        props.put("mail.user", "123@qq.com");
         // 此处填写16位STMP口令
-        props.put("mail.password", "qsombwleattwcgjd");
+        props.put("mail.password", "123");
         return props;
     }
 
